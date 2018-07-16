@@ -90,6 +90,7 @@ spec:
             value: {{ .Values.aws.region }}
         {{- end }}
         {{- end }}
+
         {{- if and .Values.cloudflare.apiKey .Values.cloudflare.email }}
           - name: CF_API_KEY
             valueFrom:
@@ -99,6 +100,41 @@ spec:
           - name: CF_API_EMAIL
             value: "{{ .Values.cloudflare.email }}"
         {{- end }}
+
+        {{- if eq .Values.provider "designate" }}
+        {{- if .Values.designate.authUrl }}
+          - name: OS_AUTH_URL
+            value: {{ .Values.designate.authUrl }}
+        {{- end }}
+
+        {{- if .Values.designate.regionName }}
+          - name: OS_REGION_NAME
+            value: {{ .Values.designate.regionName }}
+        {{- end }}
+        {{- if .Values.designate.username }}
+          - name: OS_USERNAME
+            value: {{ .Values.designate.username }}
+        {{- end }}
+        {{- if .Values.designate.projectName }}
+          - name: OS_PROJECT_NAME
+            value: {{ .Values.designate.projectName }}
+        {{- end }}
+        {{- if .Values.designate.userDomainName }}
+          - name: OS_USER_DOMAIN_NAME
+            value: {{ .Values.designate.userDomainName }}
+        {{- end }}
+
+
+        {{- if .Values.designate.password }}
+          - name: OS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "external-dns.fullname" . }}
+                key: designate_password
+        {{- end }}
+        {{- end }}
+
+
         {{- $root := . -}}
         {{- range $key, $value := .Values.extraEnv }}
           - name: {{ $key }}

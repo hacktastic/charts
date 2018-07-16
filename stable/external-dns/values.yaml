@@ -35,6 +35,15 @@ google:
   project: ""
   serviceAccountSecret: ""
 
+# OpenStack Designate keys to inject as environment variables
+designate:
+  authUrl: ""
+  regionName: ""
+  username: ""
+  password: ""
+  projectName: ""
+  userDomainName: ""
+
 ## Limit possible target zones by domain suffixes (optional)
 domainFilters: []
 # Filter sources managed by external-dns via annotation using label selector semantics (default: all sources)
