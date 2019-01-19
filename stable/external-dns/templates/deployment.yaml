@@ -108,6 +108,11 @@ spec:
             mountPath: {{ .Values.aws.credentialsPath }}
             readOnly: true
           {{- end }}
+          {{- if and (eq .Values.provider "designate") .Values.designate.custom_ca_dir }}
+          - name: designate-custom-ca
+            mountPath: {{ .Values.designate.custom_ca_dir }}
+            readOnly: true
+          {{- end }}
           env:
         {{- if or .Values.google.serviceAccountSecret .Values.google.serviceAccountKey }}
           - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -147,6 +152,10 @@ spec:
               secretKeyRef:
                 name: {{ template "external-dns.fullname" . }}
                 key: infoblox_wapi_password
+        {{- end }}
+        {{- if and (eq .Values.provider "designate") .Values.designate.custom_ca_dir .Values.designate.custom_ca_filename }}
+          - name: OPENSTACK_CA_FILE
+            value: {{ .Values.designate.custom_ca_dir }}/{{ .Values.designate.custom_ca_filename }}
         {{- end }}
         {{- $root := . -}}
         {{- range .Values.extraEnv }}
@@ -199,6 +208,11 @@ spec:
       - name: aws-credentials
         secret:
           secretName: {{ template "external-dns.fullname" . }}
+      {{- end }}
+      {{- if and (eq .Values.provider "designate") .Values.designate.custom_ca }}
+      - name: designate-custom-ca
+        configMap:
+          name: {{ .Release.Name }}-designate-custom-ca
       {{- end }}
     {{- if .Values.nodeSelector }}
       nodeSelector:

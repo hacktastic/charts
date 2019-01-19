@@ -37,6 +37,16 @@ cloudflare:
   apiKey: ""
   email: ""
   proxied: true
+
+# Configuration for OpenStack Designate provider
+designate:
+  # A custom CA (optional)
+  custom_ca: ""
+  # Location to mount custom CA (optional)
+  custom_ca_dir: "/config/designate"
+  # Filename of the custom CA (optional)
+  custom_ca_filename: ""
+
 # When using the Google provider, specify the Google project (required when provider=google)
 google:
   project: ""
